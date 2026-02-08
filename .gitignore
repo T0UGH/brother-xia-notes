@@ -1,0 +1,208 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# macOS 资源叉
+._*
+
+# macOS 文件夹属性
+.Spotlight-V100
+.Trashes
+
+# macOS 卷根目录元数据
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.nfs*
+
+# 编辑器 / IDE
+## VS Code
+.vscode/
+*.code-workspace
+.history/
+
+## IntelliJ IDEA / PyCharm / WebStorm / etc.
+.idea/
+*.iml
+*.iws
+out/
+
+## Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+## Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+## Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# 日志和临时文件
+*.log
+*.tmp
+*.temp
+*.cache
+.cache/
+logs/
+log/
+tmp/
+temp/
+
+# 环境变量文件
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+!.env.example
+
+# 依赖目录
+node_modules/
+vendor/
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 编译输出
+/dist/
+/build/
+/target/
+/out/
+*.exe
+*.dll
+*.so
+*.dylib
+*.o
+*.obj
+*.a
+*.lib
+
+# 测试相关
+.nyc_output/
+coverage/
+.tox/
+.pytest_cache/
+.hypothesis/
+*.cover
+.coverage
+.coverage.*
+
+# 文档构建
+/site/
+/site-packages/
+/docs/_build/
+/MANIFEST
+
+# 证书和密钥
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+id_ecdsa
+id_ecdsa.pub
+.ssh/
+
+# Docker
+.dockerignore
+Dockerfile.*
+docker-compose.*.yml
+
+# Kubernetes
+*.yaml.orig
+*.yml.orig
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*.backup
+*.tfvars
+
+# Serverless
+.serverless/
+
+# 静态网站生成器
+## Jekyll
+.jekyll-metadata
+.jekyll-cache/
+_site/
+
+## Hugo
+/resources/
+public/
+
+## Gatsby
+.gatsby-cache/
+
+## Next.js
+.next/
+out/
+
+## Nuxt.js
+.nuxt/
+dist/
+
+# 包管理器锁定文件（根据团队约定决定是否忽略）
+# 通常建议提交锁定文件以确保依赖一致性
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+# Pipfile.lock
+# poetry.lock
+# Gemfile.lock
+# Cargo.lock
+# composer.lock
