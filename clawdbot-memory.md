@@ -57,4 +57,23 @@ export http_proxy=http://127.0.0.1:1087 && export https_proxy=http://127.0.0.1:1
 
 ---
 
+## 4. Brave Search API Key（网络搜索）
+
+**来源**: 平哥 2026-02-09 提供  
+**Key**: `BSAgmkTvp5opOs-01_94vUjmKVctNr1`
+
+### 配置状态
+| 位置 | 状态 |
+|------|------|
+| Gateway 配置文件 | ✅ 已配置（需重启生效） |
+| Shell 环境变量 | ❌ 未设置 |
+| 当前 Session | ❌ 未加载 |
+
+### 使用说明
+- 已写入 `/Users/haha/.clawdbot/clawdbot.json` 的 `web.braveApiKey` 字段
+- **需要重启 Gateway** 后才能使用 `web_search` 工具
+- 重启后我将能够进行网络搜索
+
+---
+
 *Last updated: 2026-02-09*
