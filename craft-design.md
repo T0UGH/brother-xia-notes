@@ -134,4 +134,113 @@ feature-dev/
 
 ---
 
+## 5. NPM 包设计
+
+为了实现 Craft 的功能，我们需要发布两个 npm 包：
+
+### 5.1 包列表
+
+| 包名 | 作用 | 目标用户 | 安装方式 |
+|------|------|----------|----------|
+| `@craft/cli` | 核心 CLI 工具，包含 `craft new/next/status` 等所有命令 | 开发者（使用者） | `npm i -g @craft/cli` 或 `npx @craft/cli` |
+| `@craft/create` | 交互式创建工作流的向导 | 技术负责人（创建者） | `npx @craft/create` |
+
+### 5.2 命令对应关系
+
+```bash
+# 创建者（技术负责人）
+npx @craft/create
+# 或全局安装
+npm i -g @craft/create
+craft create    # 交互式创建工作流
+
+# 使用者（开发者）
+npx @craft/cli new
+# 或全局安装
+npm i -g @craft/cli
+craft new       # 使用工作流创建规格
+craft next      # 继续下一步
+craft status    # 查看状态
+```
+
+### 5.3 包结构
+
+#### `@craft/cli` 结构
+
+```
+@craft/cli/
+├── bin/
+│   └── craft.js            # 入口脚本
+├── src/
+│   ├── index.ts            # 主入口
+│   ├── commands/           # 子命令实现
+│   │   ├── new.ts
+│   │   ├── next.ts
+│   │   └── status.ts
+│   ├── core/               # 核心引擎
+│   │   ├── WorkflowRunner.ts
+│   │   ├── StepExecutor.ts
+│   │   └── VariableResolver.ts
+│   └── utils/
+├── package.json
+└── README.md
+```
+
+#### `@craft/create` 结构
+
+```
+@craft/create/
+├── bin/
+│   └── craft-create.js     # 入口脚本
+├── src/
+│   ├── index.ts             # 主入口
+│   ├── prompts/             # 交互式问答
+│   │   ├── workflow.ts
+│   │   ├── steps.ts
+│   │   └── variables.ts
+│   ├── generators/          # 文件生成器
+│   │   ├── WorkflowGenerator.ts
+│   │   ├── TemplateGenerator.ts
+│   │   └── SkillPackager.ts
+│   └── templates/           # 内置模板
+│       ├── feature-dev/
+│       ├── api-design/
+│       └── bug-fix/
+├── package.json
+└── README.md
+```
+
+### 5.4 发布计划
+
+| 阶段 | 包 | 版本 | 内容 |
+|------|-----|------|------|
+| Phase 1 | `@craft/create` | 0.1.0 | MVP：支持基础交互式创建工作流 |
+| Phase 2 | `@craft/cli` | 0.1.0 | MVP：支持 `craft new/next/status` |
+| Phase 3 | 两者 | 0.2.0 | 完善模板系统、验证机制、错误处理 |
+| Phase 4 | 两者 | 1.0.0 | 正式版，完整文档和示例 |
+
+---
+
+## 6. 实现路线图
+
+### Phase 1: MVP（2 周）
+- [ ] 搭建 `@craft/create` 基础结构
+- [ ] 实现交互式问答流程（4 个 Phase）
+- [ ] 实现 Skill 包生成器
+- [ ] 内置 3 个模板（feature-dev, api-design, bug-fix）
+
+### Phase 2: CLI 工具（2 周）
+- [ ] 搭建 `@craft/cli` 基础结构
+- [ ] 实现 `craft new` 命令
+- [ ] 实现 `craft next` 命令
+- [ ] 实现 `craft status` 命令
+
+### Phase 3: 完善（2 周）
+- [ ] 完善模板系统
+- [ ] 添加验证机制
+- [ ] 改进错误处理
+- [ ] 编写完整文档和示例
+
+---
+
 *设计完成，等待实现*
