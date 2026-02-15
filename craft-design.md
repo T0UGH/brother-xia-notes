@@ -244,3 +244,178 @@ craft status    # 查看状态
 ---
 
 *设计完成，等待实现*
+
+## 7. 高级功能设计
+
+### 7.1 文档分章节生成
+
+支持在 template 中定义每次 craft next 生成文档的特定章节，而不是一次性生成整个文档。
+
+**template 示例：**
+
+```yaml
+# prd-template.yaml
+chapters:
+  - id: background
+    title: 背景与目标
+    description: 说明为什么要做这个功能
+  - id: user-stories
+    title: 用户故事
+    description: 以用户视角描述需求
+  - id: requirements
+    title: 功能需求
+    description: 详细的功能点描述
+  - id: acceptance-criteria
+    title: 验收标准
+    description: 如何验证功能完成
+
+# 步骤配置中指定每次生成哪些章节
+steps:
+  - id: prd
+    name: 产品需求文档
+    template: prd-template.yaml
+    output: 01-prd.md
+    chapterGeneration:
+      - step: 1
+        chapters: [background, user-stories]
+      - step: 2
+        chapters: [requirements, acceptance-criteria]
+```
+
+### 7.2 强制加载知识性 Skills
+
+支持在文档写作前或特定章节写作前，自动加载指定的知识性 Skills，为 AI 提供领域知识支持。
+
+**配置示例：**
+
+```yaml
+# workflow.yaml
+steps:
+  - id: tech-spec
+    name: 技术方案文档
+    template: tech-spec.md
+    output: 02-tech-spec.md
+    requiredSkills:
+      - id: company-tech-stack
+        name: 公司技术栈规范
+        description: 包含公司标准技术选型、框架版本、编码规范
+      - id: security-guidelines
+        name: 安全开发规范
+        description: 包含安全编码要求、常见漏洞防护
+    chapterSkills:
+      - chapterId: architecture
+        requiredSkills:
+          - id: microservices-patterns
+            name: 微服务设计模式
+```
+
+### 7.3 SubAgent 支持
+
+支持在任何步骤中启动 SubAgent 来并行处理任务，或处理需要隔离上下文的复杂任务。
+
+**配置示例：**
+
+```yaml
+# workflow.yaml
+steps:
+  - id: security-review
+    name: 安全评审
+    template: security-review.md
+    subAgents:
+      - id: owasp-check
+        name: OWASP 漏洞扫描
+        prompt: |
+          作为安全专家，请审查以下代码/设计是否存在 OWASP Top 10 漏洞：
+          {{context.codeOrDesign}}
+          输出格式：
+          - 问题行号: 问题描述
+      - id: data-privacy-check
+        name: 数据隐私合规检查
+        prompt: |
+          作为隐私合规专家，请审查以下设计是否符合 GDPR/个人信息保护法：
+          {{context.dataHandling}}
+          输出：
+          1. 隐私风险点
+          2. 合规建议
+      - id: security-report
+        name: 安全评审报告生成
+        dependsOn: [owasp-check, data-privacy-check]
+        prompt: |
+          基于以下检查结果生成完整的安全评审报告：
+          ## OWASP 漏洞扫描结果
+          {{subAgents.owasp-check.output}}
+          ## 数据隐私合规检查结果
+          {{subAgents.data-privacy-check.output}}
+          输出：
+          1. 执行摘要
+          2. 详细发现
+          3. 优先级建议
+```
+
+### 7.4 上下文压缩建议
+
+当检测到上下文过长时，系统应主动建议用户进行上下文压缩或启动新的 SubAgent。
+
+**触发条件：**
+- Token 数超过阈值（如 8000）
+- 对话轮次过多（如 20 轮以上）
+- 单次输出内容过长
+
+**建议策略：**
+
+```typescript
+interface CompressionSuggestion {
+  type: 'compress' | 'subagent' | 'summarize';
+  reason: string;
+  action: string;
+}
+
+class ContextManager {
+  private tokenThreshold = 8000;
+  private roundThreshold = 20;
+  
+  checkContext(context: ExecutionContext): CompressionSuggestion | null {
+    const tokenCount = this.estimateTokens(context);
+    const roundCount = context.conversationRounds;
+    
+    if (tokenCount > this.tokenThreshold) {
+      return {
+        type: 'compress',
+        reason: `当前上下文约 ${tokenCount} tokens，接近模型上限`,
+        action: '建议压缩历史对话，只保留关键决策和当前状态'
+      };
+    }
+    
+    if (roundCount > this.roundThreshold) {
+      return {
+        type: 'subagent',
+        reason: `对话已进行 ${roundCount} 轮，上下文累积过多`,
+        action: '建议启动 SubAgent 处理当前任务，主 Agent 只关注结果'
+      };
+    }
+    
+    return null;
+  }
+}
+```
+
+**用户界面示例：**
+
+```bash
+$ craft next
+
+⚠️  上下文提示
+
+当前对话已进行 25 轮，上下文累积较多。
+建议启动 SubAgent 来处理当前任务，以提高效率。
+
+选项：
+  1. 启动 SubAgent（推荐）
+  2. 继续当前上下文
+  3. 压缩上下文后继续
+
+请选择: 1
+
+🚀 启动 SubAgent 处理当前任务...
+```
+
